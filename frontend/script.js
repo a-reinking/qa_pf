@@ -1,5 +1,6 @@
 // Points at your deployed backend. Update after you deploy to Render.
-const API_BASE = window.API_BASE || "https://YOUR-BACKEND.onrender.com";
+const API_BASE = window.API_BASE || "https://qa-pf.onrender.com/";
+//updated above URL with the URL of the created and deployed render web service.
 
 const form = document.getElementById("contact-form");
 const statusEl = document.getElementById("form-status");
