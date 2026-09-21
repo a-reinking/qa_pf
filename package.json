@@ -1,0 +1,13 @@
+{
+  "name": "qa-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Andy Reinking's QA portfolio — frontend, backend, and the Playwright suite that tests both.",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0"
+  }
+}
