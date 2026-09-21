@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Andy Reinking — QA Engineer</title>
+<meta name="description" content="QA portfolio for Andy Reinking — 12+ years in manual and API testing, test strategy, and team leadership, with a live Playwright automation suite.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <span class="mark">AR</span>
+    <nav>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#automation">Automation</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="prompt">andy@qa:~$ whoami</p>
+    <h1>Andy Reinking</h1>
+    <p class="role">QA Engineer — manual &amp; API testing, test strategy, team leadership</p>
+    <p class="lede">12+ years finding what breaks before your customers do. Based in Decatur, Indiana, currently building out test automation with Playwright — this site and its test suite are the proof of work.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#automation">See the test suite run</a>
+      <a class="btn" href="/resume.pdf">Download resume</a>
+    </div>
+  </section>
+
+  <section id="experience" class="section wrap">
+    <h2>Experience</h2>
+    <ol class="timeline">
+      <li>
+        <div class="timeline-meta">
+          <span class="timeline-role">QA Engineer</span>
+          <span class="timeline-org">Factor AE</span>
+        </div>
+        <p>Joined as the company's first dedicated QA hire, working within an AI-driven SDLC. Built testing practice from the ground up inside a fast-moving delivery process.</p>
+      </li>
+      <li>
+        <div class="timeline-meta">
+          <span class="timeline-role">QA Manager</span>
+          <span class="timeline-org">Intellectual Technology</span>
+        </div>
+        <p>Built and led a large QA team, covering manual and API testing, test strategy, and process across the group's release cycle.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section id="skills" class="section wrap">
+    <h2>Skills</h2>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <h3>Testing</h3>
+        <ul>
+          <li>Manual &amp; exploratory testing</li>
+          <li>API testing — Postman, Swagger</li>
+          <li>Test strategy &amp; planning</li>
+          <li>Performance testing — JMeter</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Tools &amp; platforms</h3>
+        <ul>
+          <li>Azure DevOps</li>
+          <li>SQL Server</li>
+          <li>Visual Basic</li>
+          <li>HTML/CSS</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Currently building</h3>
+        <ul>
+          <li>Playwright — E2E &amp; API automation</li>
+          <li>JavaScript / TypeScript</li>
+          <li>Git-based version control</li>
+        </ul>
+      </div>
+      <div class="skill-group">
+        <h3>Leadership</h3>
+        <ul>
+          <li>Built &amp; led QA teams</li>
+          <li>Hiring &amp; mentoring testers</li>
+          <li>Cross-functional delivery coordination</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="automation" class="section wrap">
+    <h2>Automation showcase</h2>
+    <p class="section-intro">This site is tested by its own Playwright suite, run automatically on every deploy. The report below is real output, not a screenshot.</p>
+    <div class="automation-card">
+      <div class="automation-status">
+        <span class="dot"></span>
+        <span id="ci-status-text">Checking latest run…</span>
+      </div>
+      <ul class="automation-scope">
+        <li>Navigation &amp; link integrity across every section</li>
+        <li>Contact form submission, validated end-to-end against the live API</li>
+        <li>Responsive layout checks at mobile, tablet, and desktop widths</li>
+        <li>API tests against the backend's JSON endpoints</li>
+      </ul>
+      <a class="btn btn-primary" id="report-link" href="https://github.com/YOUR-USERNAME/qa-portfolio/actions" target="_blank" rel="noopener">View latest test report</a>
+    </div>
+  </section>
+
+  <section id="contact" class="section wrap">
+    <h2>Contact</h2>
+    <p class="section-intro">This form posts to a live Express API — it's part of the same system the automation suite tests.</p>
+    <form id="contact-form" class="contact-form" novalidate>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required autocomplete="name">
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required autocomplete="email">
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+
+      <button type="submit" class="btn btn-primary">Send message</button>
+      <p id="form-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</main>
+
+<footer class="site-footer wrap">
+  <p>Built by Andy Reinking. Frontend, backend, and Playwright suite all written from scratch.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
