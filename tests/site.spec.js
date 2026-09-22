@@ -63,7 +63,7 @@ test.describe("Portfolio site — contact form", () => {
     const isValid = await page.locator("#email").evaluate((el) => el.checkValidity());
     expect(isValid).toBeFalsy();
   });
-
+/* commenting this out for now. updated js below. 20260922
   test("submits successfully with valid data", async ({ page }) => {
     await page.goto("./");
     await page.fill("#name", "Jordan Recruiter");
@@ -73,3 +73,26 @@ test.describe("Portfolio site — contact form", () => {
     await expect(page.locator("#form-status")).toHaveText(/sent/i, { timeout: 10000 });
   });
 });
+*/
+test("submits successfully with valid data", async ({ page }) => {
+  await page.route("**/api/contact", async (route) => {
+    expect(route.request().method()).toBe("POST");
+
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({
+        message: "Received — thanks for reaching out.",
+        id: 1,
+      }),
+    });
+  });
+
+  await page.goto("./");
+  await page.fill("#name", "Jordan Recruiter");
+  await page.fill("#email", "jordan@example.com");
+  await page.fill("#message", "Loved the portfolio — let's talk.");
+  await page.click("button[type=submit]");
+
+  await expect(page.locator("#form-status")).toHaveText(/sent/i);
+});grep -q 'replace(/\\/+\$/, "")' /tmp/script.js
