@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
 
-permissions: 
+permissions:
   contents: write
 
 jobs:
@@ -54,13 +54,19 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      # Optional: publish the report to a gh-pages branch so it's a public link,
-      # not just a downloadable CI artifact. Requires GitHub Pages enabled on
-      # the gh-pages branch, and the workflow given write permission.
+      # Publishes the report into the SAME branch/folder structure GitHub Pages
+      # already serves (main, root), under /test-report — rather than a separate
+      # gh-pages branch, which Pages isn't configured to serve here and would
+      # 404. keep_files: true stops this from wiping out index.html etc.
+      # [skip ci] in the commit message stops this bot commit from re-triggering
+      # the workflow in a loop.
       - name: Deploy report to GitHub Pages
         if: github.ref == 'refs/heads/main' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: main
           publish_dir: ./playwright-report
           destination_dir: test-report
+          keep_files: true
+          commit_message: "chore: publish latest Playwright report [skip ci]"
