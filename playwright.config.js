@@ -1,8 +1,10 @@
 const { defineConfig, devices } = require("@playwright/test");
 
 // Point these at your deployed site and API before running in CI.
-const SITE_URL = process.env.SITE_URL || "https://areinking1979.github.io/qa_pf";
-const API_URL = process.env.API_URL || "https://qa-pf.onrender.com";
+const SITE_URL = process.env.SITE_URL || "https://areinking1979.github.io/qa_pf/";
+const API_URL = process.env.API_URL || "https://qa-pf.onrender.com"/;
+const siteBaseURL = SITE_URL.replace(/\/+$/, "") + "/";
+const apiBaseURL = API_URL.replace(/\/+$/, "");
 
 module.exports = defineConfig({
   testDir: "./tests",
@@ -10,7 +12,7 @@ module.exports = defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["html", { outputFolder: "playwright-report", open: "never" }], ["list"]],
   use: {
-    baseURL: SITE_URL,
+    baseURL: siteBaseURL,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -24,10 +26,10 @@ module.exports = defineConfig({
     {
       name: "api",
       testMatch: /api\.spec\.js/,
-      use: { baseURL: API_URL, timeout: 60_000 },
+      use: { baseURL: apiBaseURL, timeout: 60_000 },
       timeout: 90_000,
     },
   ],
 });
 
-module.exports.API_URL = API_URL;
+module.exports.API_URL = apiBaseURL;
