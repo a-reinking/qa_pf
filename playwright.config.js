@@ -2,7 +2,7 @@ const { defineConfig, devices } = require("@playwright/test");
 
 // Point these at your deployed site and API before running in CI.
 const SITE_URL = process.env.SITE_URL || "https://areinking1979.github.io/qa_pf/";
-const API_URL = process.env.API_URL || "https://qa-pf.onrender.com"/;
+const API_URL = process.env.API_URL || "https://qa-pf.onrender.com/";
 const siteBaseURL = SITE_URL.replace(/\/+$/, "") + "/";
 const apiBaseURL = API_URL.replace(/\/+$/, "");
 
