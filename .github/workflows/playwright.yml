@@ -26,6 +26,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Verify deployed site
+        run: |
+          curl --fail --silent --show-error --location "$SITE_URL" > /tmp/site.html 
+          grep -q 'Andy Reinking' /tmp/site.html 
+          grep -q 'id="contact-form"' /tmp/site.html
+
       - name: Run Playwright tests
         run: npx playwright test
 
