@@ -32,6 +32,10 @@ jobs:
           grep -q 'Andy Reinking' /tmp/site.html 
           grep -q 'id="contact-form"' /tmp/site.html
 
+          SCRIPT_URL="${SITE_URL%/}/script.js"
+          curl --fail --silent --show-error --location "$SCRIPT_URL" > /tmp/script.js
+          grep -q 'replace(/\\/+\$/, "")' /tmp/script.js
+
       - name: Run Playwright tests
         run: npx playwright test
 
