@@ -1,5 +1,5 @@
 // Points at your deployed backend. Update after you deploy to Render.
-const API_BASE = (window.API_BASE || "https://qa-pf.onrender.com/").replace(/\/+$, "");
+const API_BASE = (window.API_BASE || "https://qa-pf.onrender.com/").replace(/\/+$/, "");
 
 const form = document.getElementById("contact-form");
 const statusEl = document.getElementById("form-status");
