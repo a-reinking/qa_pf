@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Point these at your live deployed URLs once frontend + backend are hosted.
-      SITE_URL: ${{ vars.SITE_URL || 'https://areinking1979.github.io/qa_pf/' }}
-      API_URL: ${{ vars.API_URL || 'https://qa-pf.onrender.com/ ' }}
+      SITE_URL: ${{ vars.SITE_URL || 'https://areinking1979.github.io/qa_pf/'}}
+      API_URL: ${{ vars.API_URL || 'https://qa-pf.onrender.com/'}}
     steps:
       - uses: actions/checkout@v4
 
