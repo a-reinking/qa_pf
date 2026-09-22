@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions: 
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,14 +30,18 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Verify deployed site
+        shell: bash
         run: |
-          curl --fail --silent --show-error --location "$SITE_URL" > /tmp/site.html 
-          grep -q 'Andy Reinking' /tmp/site.html 
-          grep -q 'id="contact-form"' /tmp/site.html
+          set -euo pipefail
 
-          SCRIPT_URL="${SITE_URL%/}/script.js"
-          curl --fail --silent --show-error --location "$SCRIPT_URL" > /tmp/script.js
-          grep -q 'replace(/\\/+\$/, "")' /tmp/script.js
+          SITE="${SITE_URL%/}"
+          curl --fail --silent --show-error --location "$SITE/" > /tmp/site.html
+          grep -Fq 'Andy Reinking' /tmp/site.html
+          grep -Fq 'id="contact-form"' /tmp/site.html
+
+          curl --fail --silent --show-error --location "$SITE/script.js" \
+            > /tmp/script.js
+          grep -Fq '.replace(/\/+$/, "")' /tmp/script.js
 
       - name: Run Playwright tests
         run: npx playwright test
@@ -51,7 +58,7 @@ jobs:
       # not just a downloadable CI artifact. Requires GitHub Pages enabled on
       # the gh-pages branch, and the workflow given write permission.
       - name: Deploy report to GitHub Pages
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && success()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
