@@ -54,19 +54,25 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      # Publishes the report into the SAME branch/folder structure GitHub Pages
-      # already serves (main, root), under /test-report — rather than a separate
-      # gh-pages branch, which Pages isn't configured to serve here and would
-      # 404. keep_files: true stops this from wiping out index.html etc.
-      # [skip ci] in the commit message stops this bot commit from re-triggering
-      # the workflow in a loop.
-      - name: Deploy report to GitHub Pages
+      # Commits the report directly into this same branch/checkout, under
+      # /test-report, so GitHub Pages (already serving main) picks it up.
+      # We use plain git here instead of peaceiris/actions-gh-pages because
+      # that action explicitly refuses to deploy when the source and
+      # destination branch are the same (a safety guard with no override).
+      # [skip ci] in the commit message stops this bot commit from
+      # re-triggering the workflow in a loop.
+      - name: Publish report into main under /test-report
         if: github.ref == 'refs/heads/main' && success()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: main
-          publish_dir: ./playwright-report
-          destination_dir: test-report
-          keep_files: true
-          commit_message: "chore: publish latest Playwright report [skip ci]"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p test-report
+          rm -rf test-report/*
+          cp -r playwright-report/* test-report/
+          git add test-report
+          if git diff --cached --quiet; then
+            echo "No changes to the report; nothing to commit."
+          else
+            git commit -m "chore: publish latest Playwright report [skip ci]"
+            git push
+          fi
