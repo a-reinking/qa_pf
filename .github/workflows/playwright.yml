@@ -1,3 +1,6 @@
+concurrency:
+  group: playwright-main
+  cancel-in-progress: false
 name: Playwright Tests
 
 on:
