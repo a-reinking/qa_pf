@@ -4,7 +4,7 @@ test.describe("Portfolio site — navigation and content", () => {
   test("loads with the expected hero content", async ({ page }) => {
     await page.goto("./");
     await expect(page.locator("h1")).toHaveText("Andy Reinking");
-    await expect(page.locator(".role")).toContainText("QA Engineer");
+    await expect(page.locator(".role")).toContainText("QA Manager | Senior QA Analyst");
   });
 
   test("every nav link scrolls to a matching section", async ({ page }) => {
@@ -31,8 +31,8 @@ test.describe("Portfolio site — navigation and content", () => {
     await page.goto("./");
     const roles = page.locator(".timeline-role");
     await expect(roles).toHaveCount(2);
-    await expect(roles.nth(0)).toHaveText("QA Engineer");
-    await expect(roles.nth(1)).toHaveText("QA Manager");
+    await expect(roles.nth(0)).toHaveText("Quality Assurance Analyst");
+    await expect(roles.nth(1)).toHaveText("Quality Assurance Manager");
   });
 });
 
