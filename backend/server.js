@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { randomUUID } = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -7,13 +8,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// In-memory store — fine for a demo/portfolio API, swap for a real DB later.
-const submissions = [];
-
 const skills = [
   { category: "Testing", items: ["Manual & exploratory testing", "API testing (Postman, Swagger)", "Test strategy & planning", "Performance testing (JMeter)"] },
-  { category: "Tools & platforms", items: ["Azure DevOps", "SQL Server", "Visual Basic", "HTML/CSS"] },
-  { category: "Currently building", items: ["Playwright (E2E & API automation)", "JavaScript / TypeScript", "Git-based version control"] },
+  { category: "Tools & platforms", items: ["Azure DevOps", "SQL Server", "Visual Basic", "HTML/CSS", "Git/GitHub"] },
+  { category: "Automation (hands-on project)", items: ["Playwright (E2E & API automation)", "JavaScript / TypeScript", "Git-based version control"] },
+  { category: "AI-assisted testing", items: ["Test strategy & case generation", "AI tooling for issue investigation"] },
   { category: "Leadership", items: ["Built & led QA teams", "Hiring & mentoring testers", "Cross-functional delivery coordination"] },
 ];
 
@@ -34,7 +33,44 @@ app.get("/api/experience", (req, res) => {
   res.json(experience);
 });
 
-app.post("/api/contact", (req, res) => {
+// Sends the contact form submission as a real email via Resend's API,
+// instead of only storing it in memory (which never persisted anyway, since
+// Render's free tier restarts the process regularly). RESEND_API_KEY and
+// CONTACT_EMAIL are set as environment variables on Render — never hardcoded
+// here. If they aren't set (e.g. running locally without them configured),
+// the form still returns success to the visitor, but nothing gets emailed;
+// a warning is logged server-side so that's obvious to notice.
+async function sendContactEmail({ name, email, message }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.CONTACT_EMAIL;
+
+  if (!apiKey || !to) {
+    console.warn("RESEND_API_KEY or CONTACT_EMAIL not set — contact form submission was not emailed.");
+    return;
+  }
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: process.env.CONTACT_FROM || "QA Portfolio <onboarding@resend.dev>",
+      to: [to],
+      reply_to: email,
+      subject: `Portfolio contact form: ${name}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Resend API responded with ${res.status}: ${body}`);
+  }
+}
+
+app.post("/api/contact", async (req, res) => {
   const { name, email, message } = req.body || {};
 
   if (!name || !email || !message) {
@@ -44,16 +80,16 @@ app.post("/api/contact", (req, res) => {
     return res.status(400).json({ error: "That email address doesn't look valid." });
   }
 
-  const submission = { id: submissions.length + 1, name, email, message, receivedAt: new Date().toISOString() };
-  submissions.push(submission);
+  try {
+    await sendContactEmail({ name, email, message });
+  } catch (err) {
+    // Don't fail the request over an email-provider hiccup — the person
+    // filling out the form still gets a normal success response. Log it
+    // server-side so it's visible in Render's logs if delivery is failing.
+    console.error("Failed to send contact email:", err);
+  }
 
-  res.status(201).json({ message: "Received — thanks for reaching out.", id: submission.id });
-});
-
-// Exposed only so the Playwright/API test suite has something to assert against.
-// Remove or protect this before treating the API as production-grade.
-app.get("/api/contact/_debug", (req, res) => {
-  res.json(submissions);
+  res.status(201).json({ message: "Received — thanks for reaching out.", id: randomUUID() });
 });
 
 if (require.main === module) {
