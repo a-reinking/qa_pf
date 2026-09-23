@@ -15,7 +15,7 @@ test.describe("API — health and data endpoints", () => {
     const body = await res.json();
     const categories = body.map((group) => group.category);
     expect(categories).toEqual(
-      expect.arrayContaining(["Testing", "Tools & platforms", "Currently building", "Leadership"])
+      expect.arrayContaining(["Testing", "Tools & platforms",  "Automation (hands-on project)", "AI-assisted testing", "Leadership"])
     );
   });
 
