@@ -35,7 +35,39 @@ form.addEventListener("submit", async (e) => {
 
 // Optional: reflect a real CI badge once you wire up GitHub Actions.
 // Replace this with a fetch to the GitHub Actions API or a status badge image.
+//const statusText = document.getElementById("ci-status-text");
+//if (statusText) {
+  //statusText.textContent = "All checks passing — last run on deploy";
+//}
+// Show the real status of the latest CI run, pulled from GitHub's public API.
 const statusText = document.getElementById("ci-status-text");
+const statusDot = document.querySelector(".automation-status .dot");
+
 if (statusText) {
-  statusText.textContent = "All checks passing — last run on deploy";
+  fetch("https://api.github.com/repos/a-reinking/qa_pf/actions/workflows/playwright.yml/runs?branch=main&per_page=1")
+    .then((res) => {
+      if (!res.ok) throw new Error(`GitHub API responded with ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      const run = data.workflow_runs && data.workflow_runs[0];
+      if (!run) throw new Error("No runs found");
+
+      const when = new Date(run.updated_at).toLocaleString(undefined, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+
+      if (run.status !== "completed") {
+        statusText.textContent = `Test run in progress — started ${when}`;
+      } else if (run.conclusion === "success") {
+        statusText.textContent = `All checks passing — last run ${when}`;
+      } else {
+        statusText.textContent = `Latest run did not pass (${run.conclusion}) — ${when}`;
+        if (statusDot) statusDot.style.background = "#B3261E";
+      }
+    })
+    .catch(() => {
+      statusText.textContent = "See the latest test report below";
+    });
 }
